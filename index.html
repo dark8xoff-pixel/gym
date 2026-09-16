@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BODY BUILDERS — Gym Membership</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<style>
+  :root{
+    --black:#0c0c0c;
+    --charcoal:#171716;
+    --steel:#232220;
+    --iron:#3a3936;
+    --off-white:#f3f1ea;
+    --grey:#9c9689;
+    --red:#e1362c;
+    --red-dark:#a8241c;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--black);
+    color:var(--off-white);
+    font-family:'Inter',sans-serif;
+    line-height:1.55;
+  }
+  h1,h2,h3,.display{
+    font-family:'Anton',sans-serif;
+    font-weight:400;
+    letter-spacing:0.5px;
+    line-height:0.95;
+    text-transform:uppercase;
+  }
+  a{color:inherit;text-decoration:none;}
+  .wrap{max-width:1100px;margin:0 auto;padding:0 24px;}
+
+  /* NAV */
+  header{
+    position:sticky;top:0;z-index:50;
+    background:rgba(12,12,12,0.92);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--iron);
+  }
+  nav{
+    display:flex;align-items:center;justify-content:space-between;
+    max-width:1100px;margin:0 auto;padding:16px 24px;
+  }
+  .logo{font-family:'Anton',sans-serif;font-size:22px;letter-spacing:1px;}
+  .logo span{color:var(--red);}
+  nav .links{display:flex;gap:28px;font-size:14px;color:var(--grey);}
+  nav .links a:hover{color:var(--off-white);}
+  .nav-cta{
+    background:var(--red);color:var(--off-white);
+    padding:10px 20px;font-size:14px;font-weight:600;
+    border:none;cursor:pointer;
+  }
+  @media (max-width:700px){ nav .links{display:none;} }
+
+  /* HERO */
+  .hero{
+    position:relative;
+    padding:110px 24px 90px;
+    border-bottom:1px solid var(--iron);
+    overflow:hidden;
+  }
+  .hero::before{
+    content:"";position:absolute;right:-120px;top:-80px;
+    width:520px;height:520px;border-radius:50%;
+    background:radial-gradient(circle, rgba(225,54,44,0.25), transparent 70%);
+  }
+  .hero-inner{max-width:1100px;margin:0 auto;position:relative;}
+  .eyebrow{color:var(--red);font-weight:600;font-size:14px;margin-bottom:18px;}
+  .hero h1{font-size:clamp(48px,9vw,104px);}
+  .hero h1 .accent{color:var(--red);}
+  .hero p{
+    max-width:520px;color:var(--grey);font-size:17px;margin-top:22px;
+  }
+  .hero-actions{display:flex;gap:16px;margin-top:36px;flex-wrap:wrap;}
+  .btn-primary{
+    background:var(--red);color:var(--off-white);padding:16px 30px;
+    font-weight:700;font-size:15px;border:none;cursor:pointer;
+  }
+  .btn-primary:hover{background:var(--red-dark);}
+  .btn-ghost{
+    border:1px solid var(--iron);color:var(--off-white);
+    padding:16px 30px;font-weight:600;font-size:15px;background:transparent;
+  }
+  .stats{
+    display:flex;gap:48px;margin-top:70px;flex-wrap:wrap;
+    border-top:1px solid var(--iron);padding-top:32px;
+  }
+  .stat .num{font-family:'Anton',sans-serif;font-size:40px;color:var(--red);}
+  .stat .label{color:var(--grey);font-size:13px;margin-top:4px;}
+
+  /* SECTION HEADERS */
+  section{padding:90px 0;border-bottom:1px solid var(--iron);}
+  .section-head{max-width:560px;margin-bottom:56px;}
+  .section-head h2{font-size:clamp(34px,5vw,52px);}
+  .section-head p{color:var(--grey);margin-top:14px;font-size:16px;}
+
+  /* ABOUT */
+  .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start;}
+  .about-grid p{color:var(--grey);margin-bottom:16px;}
+  .feature-list{margin-top:24px;}
+  .feature-list li{
+    list-style:none;padding:14px 0;border-top:1px solid var(--iron);
+    display:flex;justify-content:space-between;color:var(--off-white);font-size:15px;
+  }
+  .feature-list li:last-child{border-bottom:1px solid var(--iron);}
+  .feature-list span{color:var(--grey);}
+  @media (max-width:800px){ .about-grid{grid-template-columns:1fr;} }
+
+  /* PLANS */
+  .plans-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid var(--iron);}
+  .plan{
+    padding:36px 26px;border-right:1px solid var(--iron);
+    display:flex;flex-direction:column;background:var(--charcoal);
+    transition:background 0.2s ease;
+  }
+  .plan:last-child{border-right:none;}
+  .plan.featured{background:var(--steel);}
+  .plan-name{color:var(--grey);font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:1px;}
+  .plan-price{font-family:'Anton',sans-serif;font-size:44px;margin-top:14px;}
+  .plan-price sup{font-size:18px;font-family:'Inter',sans-serif;color:var(--grey);}
+  .plan-per{color:var(--grey);font-size:13px;margin-top:2px;}
+  .plan-desc{color:var(--grey);font-size:14px;margin-top:18px;flex-grow:1;}
+  .plan-btn{
+    margin-top:26px;padding:13px;text-align:center;
+    background:transparent;border:1px solid var(--off-white);
+    color:var(--off-white);font-weight:600;font-size:14px;cursor:pointer;
+  }
+  .plan.featured .plan-btn{background:var(--red);border-color:var(--red);}
+  .plan-btn:hover{background:var(--red);border-color:var(--red);}
+  @media (max-width:900px){
+    .plans-grid{grid-template-columns:1fr 1fr;}
+    .plan{border-bottom:1px solid var(--iron);}
+  }
+  @media (max-width:560px){ .plans-grid{grid-template-columns:1fr;} }
+
+  /* FORM */
+  #signup{padding-top:90px;}
+  .form-wrap{
+    max-width:520px;margin:0 auto;border:1px solid var(--iron);
+    padding:44px;background:var(--charcoal);
+  }
+  .form-wrap h3{font-size:28px;margin-bottom:8px;}
+  .form-wrap .muted{color:var(--grey);font-size:14px;margin-bottom:28px;}
+  .field{margin-bottom:18px;}
+  .field label{display:block;font-size:13px;color:var(--grey);margin-bottom:6px;}
+  .field input, .field select{
+    width:100%;background:var(--black);border:1px solid var(--iron);
+    color:var(--off-white);padding:13px 14px;font-size:15px;font-family:inherit;
+  }
+  .field input:focus, .field select:focus{outline:2px solid var(--red);border-color:var(--red);}
+  .pay-summary{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:16px 0;border-top:1px solid var(--iron);margin-top:6px;margin-bottom:22px;
+  }
+  .pay-summary .amt{font-family:'Anton',sans-serif;font-size:30px;color:var(--red);}
+  .submit-btn{
+    width:100%;background:var(--red);color:var(--off-white);
+    border:none;padding:16px;font-size:15px;font-weight:700;cursor:pointer;
+  }
+  .submit-btn:hover{background:var(--red-dark);}
+  .submit-btn:disabled{opacity:0.5;cursor:not-allowed;}
+  #form-msg{margin-top:16px;font-size:14px;text-align:center;}
+  #form-msg.ok{color:#7fd18a;}
+  #form-msg.err{color:var(--red);}
+
+  /* FOOTER */
+  footer{padding:50px 0;}
+  .footer-inner{
+    display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;
+  }
+  footer .logo{font-size:18px;}
+  footer .muted{color:var(--grey);font-size:13px;}
+</style>
+</head>
+<body>
+
+<header>
+  <nav>
+    <div class="logo">BODY<span>BUILDERS</span></div>
+    <div class="links">
+      <a href="#about">About</a>
+      <a href="#plans">Membership</a>
+      <a href="#signup">Join</a>
+    </div>
+    <button class="nav-cta" onclick="document.getElementById('signup').scrollIntoView()">Join Now</button>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div class="eyebrow">Anna Nagar, Chennai</div>
+    <h1>Train hard.<br>Get <span class="accent">stronger</span><br>every day.</h1>
+    <p>BODY BUILDERS is a strength and conditioning gym built for people who show up. Free weights, machines, and coaches who know your name.</p>
+    <div class="hero-actions">
+      <button class="btn-primary" onclick="document.getElementById('signup').scrollIntoView()">Become a member</button>
+      <a href="#plans" class="btn-ghost">See plans</a>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="num">500+</div><div class="label">Active members</div></div>
+      <div class="stat"><div class="num">12</div><div class="label">Years running</div></div>
+      <div class="stat"><div class="num">6AM–10PM</div><div class="label">Open daily</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="about">
+  <div class="wrap about-grid">
+    <div>
+      <div class="section-head" style="margin-bottom:0;">
+        <h2>What you get</h2>
+      </div>
+      <p style="margin-top:22px;">Every membership includes full access to the floor — no locked-off equipment, no extra charge for machines. Just walk in and train.</p>
+      <p>Our trainers run the floor every session, so form correction and spotting are part of being a member, not a paid add-on.</p>
+    </div>
+    <ul class="feature-list">
+      <li>Free weights & machines<span>Unlimited access</span></li>
+      <li>Personal training on floor<span>Included</span></li>
+      <li>Locker & shower<span>Included</span></li>
+      <li>Diet guidance<span>On request</span></li>
+      <li>Home delivery of supplements<span>On request</span></li>
+    </ul>
+  </div>
+</section>
+
+<section id="plans">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Membership plans</h2>
+      <p>Pick a plan below. Payment is secure, handled by Razorpay — you'll get a confirmation the moment it clears.</p>
+    </div>
+    <div class="plans-grid">
+      <div class="plan" data-plan="1month" data-amount="999" data-label="1 Month">
+        <div class="plan-name">1 Month</div>
+        <div class="plan-price"><sup>₹</sup>999</div>
+        <div class="plan-per">one-time</div>
+        <div class="plan-desc">Try the gym, no long commitment.</div>
+        <button class="plan-btn" onclick="selectPlan(this)">Choose plan</button>
+      </div>
+      <div class="plan featured" data-plan="3month" data-amount="2499" data-label="3 Months">
+        <div class="plan-name">3 Months</div>
+        <div class="plan-price"><sup>₹</sup>2499</div>
+        <div class="plan-per">₹833 / month</div>
+        <div class="plan-desc">Most members start here.</div>
+        <button class="plan-btn" onclick="selectPlan(this)">Choose plan</button>
+      </div>
+      <div class="plan" data-plan="5month" data-amount="3999" data-label="5 Months">
+        <div class="plan-name">5 Months</div>
+        <div class="plan-price"><sup>₹</sup>3999</div>
+        <div class="plan-per">₹800 / month</div>
+        <div class="plan-desc">Build the habit, save more.</div>
+        <button class="plan-btn" onclick="selectPlan(this)">Choose plan</button>
+      </div>
+      <div class="plan" data-plan="1year" data-amount="7999" data-label="1 Year">
+        <div class="plan-name">1 Year</div>
+        <div class="plan-price"><sup>₹</sup>7999</div>
+        <div class="plan-per">₹666 / month</div>
+        <div class="plan-desc">Best value for regular training.</div>
+        <button class="plan-btn" onclick="selectPlan(this)">Choose plan</button>
+      </div>
+    </div>
+    <p style="color:var(--grey);font-size:13px;margin-top:16px;">Prices are placeholders — edit them in index.html before going live.</p>
+  </div>
+</section>
+
+<section id="signup">
+  <div class="wrap">
+    <div class="form-wrap">
+      <h3>Join BODY BUILDERS</h3>
+      <div class="muted">Fill your details, pick a plan, and pay securely.</div>
+
+      <div class="field">
+        <label for="name">Full name</label>
+        <input id="name" type="text" placeholder="Your name" required>
+      </div>
+      <div class="field">
+        <label for="phone">Phone number (WhatsApp)</label>
+        <input id="phone" type="tel" placeholder="98765 43210" required>
+      </div>
+      <div class="field">
+        <label for="email">Email</label>
+        <input id="email" type="email" placeholder="you@example.com" required>
+      </div>
+      <div class="field">
+        <label for="plan">Membership plan</label>
+        <select id="plan">
+          <option value="1month" data-amount="999">1 Month — ₹999</option>
+          <option value="3month" data-amount="2499" selected>3 Months — ₹2499</option>
+          <option value="5month" data-amount="3999">5 Months — ₹3999</option>
+          <option value="1year" data-amount="7999">1 Year — ₹7999</option>
+        </select>
+      </div>
+
+      <div class="pay-summary">
+        <span class="muted">Amount to pay</span>
+        <span class="amt" id="amt-display">₹2499</span>
+      </div>
+
+      <button class="submit-btn" id="pay-btn" onclick="startPayment()">Pay & Join</button>
+      <div id="form-msg"></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap footer-inner">
+    <div class="logo">BODY<span style="color:var(--red)">BUILDERS</span></div>
+    <div class="muted">Anna Nagar, Chennai · 98765 43210 · Open 6AM – 10PM</div>
+  </div>
+</footer>
+
+<script>
+  // ----- CONFIG -----
+  // Point this to wherever server.js is deployed (Render, Railway, your VPS, etc.)
+  const API_BASE = "https://YOUR-BACKEND-URL.example.com";
+  const RAZORPAY_KEY_ID = "YOUR_RAZORPAY_KEY_ID"; // public key, safe to expose
+
+  const planSelect = document.getElementById('plan');
+  const amtDisplay = document.getElementById('amt-display');
+
+  function updateAmount(){
+    const opt = planSelect.options[planSelect.selectedIndex];
+    amtDisplay.textContent = "₹" + opt.dataset.amount;
+  }
+  planSelect.addEventListener('change', updateAmount);
+
+  function selectPlan(btn){
+    const plan = btn.parentElement.dataset.plan;
+    planSelect.value = plan;
+    updateAmount();
+    document.getElementById('signup').scrollIntoView({behavior:'smooth'});
+  }
+
+  function setMsg(text, type){
+    const el = document.getElementById('form-msg');
+    el.textContent = text;
+    el.className = type || '';
+  }
+
+  async function startPayment(){
+    const name = document.getElementById('name').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const opt = planSelect.options[planSelect.selectedIndex];
+    const plan = opt.value;
+    const planLabel = opt.textContent;
+    const amount = parseInt(opt.dataset.amount, 10);
+
+    if(!name || !phone || !email){
+      setMsg("Please fill in your name, phone and email.", "err");
+      return;
+    }
+
+    const payBtn = document.getElementById('pay-btn');
+    payBtn.disabled = true;
+    setMsg("Creating your order...", "");
+
+    try{
+      // 1. Ask our backend to create a Razorpay order
+      const orderRes = await fetch(API_BASE + "/create-order", {
+        method: "POST",
+        headers: {"Content-Type":"application/json"},
+        body: JSON.stringify({ amount, plan, planLabel, name, phone, email })
+      });
+      const order = await orderRes.json();
+      if(!order.id){ throw new Error(order.error || "Could not create order"); }
+
+      // 2. Open Razorpay Checkout
+      const rzp = new Razorpay({
+        key: RAZORPAY_KEY_ID,
+        amount: order.amount,
+        currency: "INR",
+        name: "BODY BUILDERS",
+        description: planLabel + " Membership",
+        order_id: order.id,
+        prefill: { name, email, contact: phone },
+        theme: { color: "#e1362c" },
+        handler: async function(response){
+          setMsg("Verifying payment...", "");
+          const verifyRes = await fetch(API_BASE + "/verify-payment", {
+            method: "POST",
+            headers: {"Content-Type":"application/json"},
+            body: JSON.stringify({
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+              name, phone, email, plan, planLabel, amount
+            })
+          });
+          const verify = await verifyRes.json();
+          if(verify.success){
+            setMsg("Payment successful! Welcome to BODY BUILDERS, " + name + ".", "ok");
+          } else {
+            setMsg("Payment could not be verified. Please contact the gym.", "err");
+          }
+          payBtn.disabled = false;
+        },
+        modal: {
+          ondismiss: function(){
+            setMsg("Payment cancelled.", "err");
+            payBtn.disabled = false;
+          }
+        }
+      });
+      rzp.open();
+    } catch(err){
+      console.error(err);
+      setMsg("Something went wrong. Please try again.", "err");
+      payBtn.disabled = false;
+    }
+  }
+</script>
+
+</body>
+</html>
